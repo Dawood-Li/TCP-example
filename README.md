@@ -1,32 +1,37 @@
 # TCP-example
-    自用tcp框架
 
-    用std::function来代替函数重载，最简化接口和数据结构。
-    根据目前分析，瓶颈应该是在io，且自用的负载没那么重，暂不考虑线程池
+## 说明
+## Introduction
 
-    以下为阶段性目标：
-        当前版本：ver 1
-        在考虑要不要跳过23直接写4
+更新。  
+update.  
 
-    1 基本实现 单连接
-        阻塞等待连接，阻塞等待消息，同步处理消息，其他连接排队等待
-        具备了远程处理能力
-        但无法同时为多个客户端提供服务
-        连接数量1
-    
-    2 多线程处理多连接
-        阻塞等待连接，子线程阻塞等待消息，同一线程同步处理消息
-        初步具备多连接处理能力，但因线程瓶颈而受限
-        连接数量我估计应该不大于5倍物理核心数量
+c_tcp_v1, cpp_tcp是以前写的。  
+c_tcp_v1, cpp_tcp were written before.  
 
-    3 非阻塞轮询处理多连接
-        非阻塞轮询连接，非阻塞轮询消息，同步处理消息。
-        能够处理更多连接
-        连接数量一定大于上一种方式，但延迟随连接数量指数上升，效能依然非常有限。
-    
-    4 epoll边缘触发 + 同步处理消息
-        消除新连接/消息事件因连接数量而指数上升的的延迟
-        连接数量理论无限 效能可观
-    
-    5 epoll边缘触发 + 协程
-        接近单线程理论性能
+新增c_tcp_v2。采用类似cpp_tcp的风格的c代码。  
+add c_tcp_v2. use c code with a style similar to cpp_tcp.
+
+## 已知问题
+## Known Problem
+
+目前，它是最基础的阻塞单线程IO模型, 且不具备实用性。  
+at present, it is the most basic blocking single thread IO model and doesn't have practicality.
+
+client的接口设计并不好 或许可以参照Qt的接口风格。
+The interface design of the client is not good, perhaps we can refer to Qt's interface style.
+
+## 未来将实现：
+## achieve in the future:
+
+c_tcp_v3: epoll, 阻塞, 水平触发, 单线程。  
+C_tcp_v3: epoll, blocked, horizontally triggered, single threaded.  
+
+c_tcp_v4: epoll, 无阻塞, 边缘触发, 单线程。  
+C_tcp_v4: epoll, non blocking, edge triggered, single threaded.  
+
+c_tcp_v5: epoll, 无阻塞, 边缘触发, 多线程。  
+c_tcp_v5: epoll, non blocking, edge triggered, multi-threaded.  
+
+c_tcp_v6: epoll, 无阻塞, 边缘触发, 协程。  
+c_tcp_v6: epoll, non blocking, edge triggered, coroutine.  
